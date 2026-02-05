@@ -1,111 +1,106 @@
-README 1 — Ataque Man-in-the-Middle (MitM) mediante ARP Spoofing con Scapy
-📌 Objetivo del Script
+README — Ataque Man-in-the-Middle (MitM) mediante ARP Spoofing con Scapy
+Objetivo del Script
 
-El objetivo de este laboratorio es demostrar cómo un atacante puede posicionarse entre dos dispositivos dentro de una red local mediante un ataque Man-in-the-Middle (MitM) utilizando ARP Spoofing.
+El objetivo de este laboratorio es demostrar cómo un atacante puede interceptar el tráfico de red entre dos dispositivos dentro de una red local mediante un ataque Man-in-the-Middle (MitM) utilizando ARP Spoofing.
 
-El script desarrollado en Python con Scapy envía respuestas ARP falsificadas a la víctima y al gateway, haciendo que ambos dispositivos asocien la dirección MAC del atacante con direcciones IP legítimas.
+El script desarrollado en Python con Scapy envía respuestas ARP falsificadas tanto a la víctima como al gateway, provocando que ambos asocien la dirección MAC del atacante con direcciones IP legítimas. Como resultado, el tráfico pasa a través del equipo atacante sin ser detectado por los usuarios.
 
-Como resultado, todo el tráfico pasa a través del atacante sin que los usuarios lo perciban.
+Topología de Red
 
-🖥️ Topología de Red
+Ejemplo (ajústalo según tu laboratorio real):
 
-Ejemplo (ajústalo a tu lab real):
-
-Dispositivo	Rol	IP	MAC	Interfaz
-Kali Linux	Atacante	10.0.0.10	XX:XX:XX:XX	eth0
-Ubuntu	Víctima	10.0.0.20	XX:XX:XX:XX	eth0
-Router	Gateway	10.0.0.1	XX:XX:XX:XX	eth0
+Dispositivo	Rol	Dirección IP	Interfaz
+Kali Linux	Atacante	10.0.0.10	eth0
+Ubuntu/Linux	Víctima	10.0.0.20	eth0
+Router	Gateway	10.0.0.1	eth0
 
 Segmento de red: 10.0.0.0/24
 VLAN: No utilizada (red plana de laboratorio).
 
-👉 Esto es importante porque ARP spoofing solo funciona dentro del mismo dominio de broadcast.
+Nota técnica: El ARP spoofing solo funciona dentro del mismo dominio de broadcast.
 
-📸 Capturas de Pantalla
+Capturas de Pantalla
 
-Inserta en este orden (MUY importante para que el reporte tenga narrativa técnica):
+Inserta las imágenes en el siguiente orden para mantener coherencia técnica en la documentación:
 
-🔹 Topología en PNETLab
+Topología en PNETLab
 
-(Insertar imagen aquí)
+(Insertar imagen)
 
-🔹 Tabla ARP antes del ataque
+Tabla ARP antes del ataque
+
+Comando:
+
 arp -a
 
 
 (Insertar imagen)
 
-🔹 Ejecución del Script
+Ejecución del script
 sudo python3 ScapyARP2.py
 
 
 (Insertar imagen)
 
-🔹 Tabla ARP después del ataque
+Tabla ARP después del ataque
 
-Debe mostrar la MAC del atacante asociada al gateway.
+Debe evidenciar que la MAC del atacante aparece asociada al gateway o a la víctima.
 
 (Insertar imagen)
 
-⚙️ Parámetros Usados
+Parámetros Usados
 
-Dentro del script se definieron los siguientes valores:
+Ejemplo de variables definidas en el script:
 
 target_ip = "10.0.0.20"
 gateway_ip = "10.0.0.1"
 interface = "eth0"
 
-Funciones principales:
+Funcionalidades principales del script
 
-✅ Obtención de MAC mediante solicitudes ARP
-✅ Envío de respuestas ARP falsas
-✅ Activación de IP Forwarding para evitar interrupciones
-✅ Restauración de la red al finalizar
+Obtención de direcciones MAC mediante solicitudes ARP.
 
-🧰 Requisitos para Utilizar la Herramienta
-Software:
+Envío continuo de respuestas ARP falsificadas.
 
-Kali Linux / cualquier distro con Python
+Activación de IP Forwarding para evitar la interrupción de la comunicación.
+
+Restauración de la configuración ARP original al finalizar el ataque.
+
+Requisitos para Utilizar la Herramienta
+Software requerido
+
+Kali Linux o cualquier distribución Linux
 
 Python 3
 
-Scapy
+Biblioteca Scapy
 
-Permisos root
+Permisos de superusuario
 
-PNETLab o entorno virtualizado
+Entorno virtualizado (PNETLab, VMware o VirtualBox)
 
-Instalación de Scapy:
+Instalación de Scapy
 pip install scapy
 
-Activar el reenvío de paquetes:
+Activación del reenvío de paquetes
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
-🛡️ Medidas de Mitigación
+Medidas de Mitigación
 
-Este tipo de ataque puede prevenirse implementando controles de seguridad en la red:
+Para reducir el riesgo de ataques ARP spoofing se recomienda implementar los siguientes controles:
 
-🔹 Dynamic ARP Inspection (DAI)
+Dynamic ARP Inspection (DAI): valida los paquetes ARP comparándolos con la tabla generada por DHCP Snooping.
 
-Valida los paquetes ARP contra una tabla DHCP Snooping.
+DHCP Snooping: previene la asignación de direcciones IP por dispositivos no autorizados.
 
-🔹 DHCP Snooping
+Entradas ARP estáticas: limitan la posibilidad de envenenamiento ARP.
 
-Evita que dispositivos no autorizados asignen direcciones IP.
+Segmentación mediante VLANs: reduce el alcance del dominio de broadcast.
 
-🔹 Entradas ARP estáticas
+Uso de VPN: protege la confidencialidad del tráfico incluso si es interceptado.
 
-Reduce el riesgo de envenenamiento ARP.
+Conclusión Técnica
 
-🔹 Segmentación de red (VLANs)
+El laboratorio evidencia que el ARP spoofing continúa siendo un método efectivo de interceptación en redes locales que carecen de controles de seguridad en la capa 2. La facilidad con la que un atacante puede posicionarse entre dos dispositivos resalta la necesidad de implementar mecanismos de protección adecuados.
 
-Limita el alcance del ataque.
-
-🔹 Uso de VPN
-
-Cifra el tráfico incluso si es interceptado.
-
-⚠️ Conclusión Técnica
-
-El laboratorio demostró que ARP spoofing sigue siendo un ataque efectivo en redes locales mal configuradas.
-La facilidad con la que un atacante puede interceptar tráfico resalta la importancia de aplicar controles de seguridad en la capa 2.
+Este laboratorio fue realizado en un entorno controlado con fines educativos y siguiendo principios éticos de ciberseguridad.
