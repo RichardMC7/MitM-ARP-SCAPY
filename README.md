@@ -20,25 +20,21 @@ Condición clave: Todos los equipos deben estar en el mismo dominio de broadcast
 Capturas de Pantalla
 Topología en PNETLab
 
-(Insertar imagen)
 
 Tabla ARP antes del ataque
 arp -a
 
 
-(Insertar imagen)
 
 Ejecución del script
 sudo python3 arp_mitm.py
 
 
-(Insertar imagen)
 
 Tabla ARP después del ataque
 
 Debe observarse la MAC del atacante asociada al gateway o a la víctima.
 
-(Insertar imagen)
 
 Evidencia de tráfico interceptado (Wireshark o tcpdump)
 
@@ -49,7 +45,6 @@ dns
 icmp
 
 
-(Insertar imagen)
 
 Parámetros Usados
 
